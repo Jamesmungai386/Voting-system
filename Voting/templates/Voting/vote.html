@@ -1,0 +1,48 @@
+{% extends 'Voting/base.html' %}
+{% block title %}Vote{% endblock %}
+{% block content %}
+<h2>Cast your Vote</h2>
+<form method="post">
+    {% csrf_token %}
+
+    <h2>General Positions</h2>
+
+    {% for position in general_positions %}
+         <h4>{{position.title}}</h4>
+
+         {% for candidate in position.candidate_set.all %}
+        <div style="margin-bottom: 20px;">
+         <input type="radio" 
+               name="position_{{ position.id }}"
+                value="{{candidate.id}}"
+                id="candidate{{ candidate.id}}">
+            <label for="candidate{{ candidate.id}}">
+             {{ candidate.user.username }}
+            </label>
+        </div>
+       {% endfor %}
+    {% endfor %}
+
+    {% for school in schools %}
+    <h3>{{ school.name }}</h3>
+
+    {% for position in school.position_set.all %}
+    <h3>{{position.title}}</h3>
+    {% for candidate in position.candidate_set.all %}
+    <div style="margin-bottom: 20px;">
+        <input type="radio" 
+               name="position_{{ position.id }}"
+                value="{{candidate.id}}"
+                id="candidate{{ candidate.id}}">
+        <label for="candidate{{ candidate.id}}">
+             {{ candidate.user.username }}
+        </label>
+    </div>
+    {% endfor %}
+    {% endfor %}
+    {% endfor %}
+
+    <button type="submit">Submit vote</button>
+</form>
+
+{% endblock %}

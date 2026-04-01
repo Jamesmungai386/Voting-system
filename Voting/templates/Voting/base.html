@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block title%}Voting system{%endblock%}</title>
+</head>
+<body>
+    <header>
+        <h1>University voting system</h1>
+        <nav>
+            <a href="{%url 'home' %}">Home</a>
+            <a href="{% url 'results'  %}">Results</a>
+
+            {% if user.is_authenticated %}
+            <a href="{% url 'vote' %}">Vote</a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+            {% endif %} 
+        </nav>
+
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>
+            &copy; {{ year}}Masinde Muliro University
+        </p>
+    </footer>
+    
+</body>
+</html>

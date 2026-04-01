@@ -1,0 +1,52 @@
+{% extends 'Voting/base.html' %}
+{% block tittle%}Results{% endblock %}
+
+{% block content %}
+<h2>Voting Results</h2>
+{% for school_data in  all_results %}
+<h2>{{ school_data.school.name }}</h2>
+
+{% for item in school_data.results %}
+<h3>{{ item.position.title }}</h3>
+<table border="1" style="margin-bottom: 20px;">
+    <tr>
+        <th>Candidates</th>
+        <th>Votes</th>
+    </tr>
+    {% for candidate, count in item.results %}
+    <tr>
+        <td>{{ candidate.user.username}}</td>
+         <td>{{ count}}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">No votes recorded for this position.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+{% endfor %}
+
+<hr>
+
+<h2>General Positions</h2>
+{% for item in general_results %}
+<h3>{{ item.position.title }}</h3>
+<table border="1" style="margin-bottom: 20px;">
+    <tr>
+        <th>Candidates</th>
+        <th>Votes</th>
+    </tr>
+    {% for candidate, count in item.results %}
+    <tr>
+        <td>{{ candidate.user.username}}</td>
+         <td>{{ count}}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">No votes recorded for this position.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+{% endblock %}

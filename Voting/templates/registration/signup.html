@@ -1,0 +1,21 @@
+{% extends 'Voting/base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+    <h2>Sign Up</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <label for="school">Select School:</label>
+        <select name="school" id="school" required>
+            <option value="">---------</option>
+            {% for school in schools %}
+                <option value="{{ school.id }}">{{ school.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
+{% endblock %}

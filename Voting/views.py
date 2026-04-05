@@ -30,6 +30,9 @@ def home_view(request):
 @login_required
 def vote_view(request):
 
+    if request.user.is_superuser:
+        return redirect('results')
+
     user_school = request.user.studentprofile.school
 
     if Vote.objects.filter(voter = request.user).exists():

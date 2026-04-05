@@ -3,19 +3,76 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-    <h2>Sign Up</h2>
+<style>
+    .signup-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 25px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .signup-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .signup-container label{
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .signup-container input[type="text"],
+    .signup-container select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .signup-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .signup-container button:hover {
+        background-color: #0056b3;
+    }
+    .signup-container p {
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+<div class="signup-container">
+    <h2>Create Account</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <label>Username</label>
+        {{ form.username }}
 
-        <label for="school">Select School:</label>
-        <select name="school" id="school" required>
-            <option value="">---------</option>
+        <label>Password</label>
+        {{ form.password1 }}
+            
+        <label>Confirm Password</label>
+        {{ form.password2 }}    
+
+        <label>Select School</label>
+        <select name="school" required>
+            <option value="">-- Select School --</option>
             {% for school in schools %}
                 <option value="{{ school.id }}">{{ school.name }}</option>
             {% endfor %}
         </select>
         <button type="submit">Sign Up</button>
     </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
+
+    <p>
+        Already have an account?
+        <a href="{% url 'login' %}">Log in</a>
+    </p>
+</div>
+
 {% endblock %}

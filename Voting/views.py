@@ -9,7 +9,7 @@ def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         school_id = request.POST.get('school')
-        if form.is_valid():
+        if form.is_valid() and school_id:
             user = form.save()
 
             school = School.objects.get(id=school_id)

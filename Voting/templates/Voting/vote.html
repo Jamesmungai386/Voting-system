@@ -1,48 +1,93 @@
 {% extends 'Voting/base.html' %}
 {% block title %}Vote{% endblock %}
 {% block content %}
-<h2>Cast your Vote</h2>
+<h2 style="border-bottom:none; text-align:center; margin-bottom: 2rem;">Cast your Vote</h2>
 <form method="post">
     {% csrf_token %}
 
-    <h2>General Positions</h2>
-
-    {% for position in general_positions %}
-         <h4>{{position.title}}</h4>
-
-         {% for candidate in position.candidate_set.all %}
-        <div style="margin-bottom: 20px;">
-         <input type="radio" 
-               name="position_{{ position.id }}"
-                value="{{candidate.id}}"
-                id="candidate{{ candidate.id}}">
-            <label for="candidate{{ candidate.id}}">
-             {{ candidate.user.username }}
-            </label>
-        </div>
-       {% endfor %}
-    {% endfor %}
-
-    {% for school in schools %}
-    <h3>{{ school.name }}</h3>
-
-    {% for position in school.position_set.all %}
-    <h3>{{position.title}}</h3>
-    {% for candidate in position.candidate_set.all %}
-    <div style="margin-bottom: 20px;">
-        <input type="radio" 
-               name="position_{{ position.id }}"
-                value="{{candidate.id}}"
-                id="candidate{{ candidate.id}}">
-        <label for="candidate{{ candidate.id}}">
-             {{ candidate.user.username }}
-        </label>
+    {% if general_positions %}
+    <div class="card">
+        <h2>General Positions</h2>
+        {% for position in general_positions %}
+            <h4>{{position.title}}</h4>
+            {% for candidate in position.candidate_set.all %}
+            <div class="radio-group">
+                <input type="radio" 
+                       name="position_{{ position.id }}"
+                       value="{{candidate.id}}"
+                       id="candidate{{ candidate.id}}">
+                <label for="candidate{{ candidate.id}}">
+                    {{ candidate.user.username }}
+                </label>
+            </div>
+            {% endfor %}
+        {% endfor %}
     </div>
-    {% endfor %}
-    {% endfor %}
-    {% endfor %}
+    {% endif %}
 
-    <button type="submit">Submit vote</button>
+    {% if school_positions %}
+    <div class="card">
+        <h2>{{ school.name }}</h2>
+        {% for position in school_positions %}
+            <h4>{{position.title}}</h4>
+            {% for candidate in position.candidate_set.all %}
+            <div class="radio-group">
+                <input type="radio" 
+                       name="position_{{ position.id }}"
+                       value="{{candidate.id}}"
+                       id="candidate{{ candidate.id}}">
+                <label for="candidate{{ candidate.id}}">
+                    {{ candidate.user.username }}
+                </label>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if hall_positions %}
+    <div class="card">
+        <h2>{{ hall.name }}</h2>
+        {% for position in hall_positions %}
+            <h4>{{position.title}}</h4>
+            {% for candidate in position.candidate_set.all %}
+            <div class="radio-group">
+                <input type="radio" 
+                       name="position_{{ position.id }}"
+                       value="{{candidate.id}}"
+                       id="candidate{{ candidate.id}}">
+                <label for="candidate{{ candidate.id}}">
+                    {{ candidate.user.username }}
+                </label>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if non_resident_positions %}
+    <div class="card">
+        <h2>Non-Resident Positions</h2>
+        {% for position in non_resident_positions %}
+            <h4>{{position.title}}</h4>
+            {% for candidate in position.candidate_set.all %}
+            <div class="radio-group">
+                <input type="radio" 
+                       name="position_{{ position.id }}"
+                       value="{{candidate.id}}"
+                       id="candidate{{ candidate.id}}">
+                <label for="candidate{{ candidate.id}}">
+                    {{ candidate.user.username }}
+                </label>
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button type="submit" class="btn-primary" style="max-width: 300px;">Submit vote</button>
+    </div>
 </form>
 
 {% endblock %}

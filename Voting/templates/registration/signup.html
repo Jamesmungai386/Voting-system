@@ -3,76 +3,126 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<style>
-    .signup-container {
-        max-width: 400px;
-        margin: 50px auto;
-        padding: 25px;
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .signup-container h2 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .signup-container label{
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-    .signup-container input[type="text"],
-    .signup-container select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-    .signup-container button {
-        width: 100%;
-        padding: 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .signup-container button:hover {
-        background-color: #0056b3;
-    }
-    .signup-container p {
-        text-align: center;
-        margin-top: 15px;
-    }
-</style>
-<div class="signup-container">
+<div class="form-container">
     <h2>Create Account</h2>
     <form method="post">
         {% csrf_token %}
-        <label>Username</label>
-        {{ form.username }}
 
-        <label>Password</label>
-        {{ form.password1 }}
-            
-        <label>Confirm Password</label>
-        {{ form.password2 }}    
-
-        <label>Select School</label>
-        <select name="school" required>
-            <option value="">-- Select School --</option>
-            {% for school in schools %}
-                <option value="{{ school.id }}">{{ school.name }}</option>
+        {% if form.errors %}
+        <div class="error-msg">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                {% endfor %}
             {% endfor %}
-        </select>
-        <button type="submit">Sign Up</button>
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label>Registration Number</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            {{ form.password1 }}
+        </div>
+            
+        <div class="form-group">
+            <label>Confirm Password</label>
+            {{ form.password2 }}    
+        </div>
+
+        <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" id="genderSelect" required>
+                <option value="">-- Select Gender --</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Residency Status</label>
+            <select name="residency_status" id="residencySelect" required>
+                <option value="">-- Select Residency Status --</option>
+                <option value="R">Resident</option>
+                <option value="NR">Non-Resident</option>
+            </select>
+        </div>
+
+        <div id="hallContainer" class="form-group" style="display: none;">
+            <label>Select Hall</label>
+            <select name="hall" id="hallSelect">
+                <option value="">-- Select Hall --</option>
+                {% for hall in halls %}
+                    <option value="{{ hall.id }}" data-gender="{{ hall.gender_allowed }}">{{ hall.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select School</label>
+            <select name="school" required>
+                <option value="">-- Select School --</option>
+                {% for school in schools %}
+                    <option value="{{ school.id }}">{{ school.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Sign Up</button>
     </form>
 
-    <p>
-        Already have an account?
-        <a href="{% url 'login' %}">Log in</a>
-    </p>
+    <div class="auth-link">
+        Already have an account? <a href="{% url 'login' %}">Log in</a>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var residencySelect = document.getElementById("residencySelect");
+        var hallContainer = document.getElementById("hallContainer");
+        var hallSelect = document.getElementById("hallSelect");
+        var genderSelect = document.getElementById("genderSelect");
+
+        function updateForm() {
+            var res = residencySelect.value;
+            var gender = genderSelect.value;
+            
+            if (res === "R") {
+                hallContainer.style.display = "block";
+                hallSelect.required = true;
+                
+                // Filter halls by gender
+                Array.from(hallSelect.options).forEach(function(opt) {
+                    if (opt.value === "") return;
+                    var hallGender = opt.getAttribute("data-gender");
+                    if (hallGender === "B" || hallGender === gender) {
+                        opt.style.display = "block";
+                    } else {
+                        opt.style.display = "none";
+                    }
+                });
+                
+                // Clear selection if it is hidden
+                var selectedOpt = hallSelect.options[hallSelect.selectedIndex];
+                if (selectedOpt && selectedOpt.style.display === "none") {
+                    hallSelect.value = "";
+                }
+            } else {
+                hallContainer.style.display = "none";
+                hallSelect.required = false;
+                hallSelect.value = "";
+            }
+        }
+
+        residencySelect.addEventListener("change", updateForm);
+        genderSelect.addEventListener("change", updateForm);
+    });
+</script>
 
 {% endblock %}
